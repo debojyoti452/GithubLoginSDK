@@ -1,7 +1,7 @@
 package com.swing.githubloginsdk
 
-import android.app.Activity
-import androidx.fragment.app.FragmentActivity
+import android.content.Context
+import android.content.Intent
 import com.swing.githubloginsdk.src.ui.GithubSheetFragment
 import kotlin.properties.Delegates
 
@@ -11,7 +11,7 @@ class GithubAuth private constructor(
     private var gitToken: String,
     val onSuccess: ((token: String) -> Unit),
     val onFailed: ((error: String) -> Unit),
-    val activity: Activity,
+    val context: Context,
 ) {
 
     open class Builder(
@@ -21,10 +21,10 @@ class GithubAuth private constructor(
         private var isSafeWindow by Delegates.notNull<Boolean>()
         private lateinit var onSuccess: ((token: String) -> Unit)
         private lateinit var onFailed: ((error: String) -> Unit)
-        private var activity: Activity? = null
+        private var context: Context? = null
 
-        fun setActivity(activity: Activity): Builder {
-            this.activity = activity
+        fun setContext(context: Context): Builder {
+            this.context = context
             return this
         }
 
@@ -44,7 +44,7 @@ class GithubAuth private constructor(
         }
 
         fun build(): GithubAuth {
-            if (activity == null) {
+            if (context == null) {
                 throw NullPointerException(
                     "Activity is missing. " +
                             "You need to pass current activity. " +
@@ -57,7 +57,7 @@ class GithubAuth private constructor(
                     gitToken = gitToken,
                     onSuccess = onSuccess,
                     onFailed = onFailed,
-                    activity = activity!!,
+                    context = context!!,
                 )
             }
         }
@@ -66,7 +66,8 @@ class GithubAuth private constructor(
     fun auth() {
 //        https://github.com/login/oauth/authorize?client_id=31e1daafe57abcbd91ce&scope=public_repo%20read:user%20user:email
 //        onSuccess.invoke("Hello World")
-        val dialog = GithubSheetFragment.newInstance()
-        dialog.show((activity as FragmentActivity).supportFragmentManager, GithubAuth::class.java.simpleName)
+//        val dialog = GithubSheetFragment.newInstance()
+//        dialog.show((context as FragmentActivity).supportFragmentManager, GithubAuth::class.java.simpleName)
+        context.startActivity(Intent(context, GithubSheetFragment::class.java))
     }
 }

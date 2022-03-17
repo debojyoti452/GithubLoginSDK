@@ -4,65 +4,87 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.fragment.app.DialogFragment
+import android.webkit.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import com.swing.githubloginsdk.R
+import timber.log.Timber
 
-class GithubSheetFragment : DialogFragment(), View.OnClickListener {
+class GithubSheetFragment : AppCompatActivity(), View.OnClickListener {
 
+    private var closeDialogBtn: AppCompatImageView? = null
     private var gitWebView: WebView? = null
-    val url =
+    private val url =
         "https://github.com/login/oauth/authorize?client_id=31e1daafe57abcbd91ce&scope=public_repo%20read:user%20user:email"
 
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.dialog_github_fragment)
+        initialize()
+        setWebView()
 
-        gitWebView = view.findViewById(R.id.gitWebView)
+        val data: Uri? = intent?.data
+        Timber.d(data.toString());
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setWebView() {
         gitWebView?.settings?.javaScriptEnabled = true
+
+        WebStorage.getInstance().deleteAllData()
+        // Clear all the cookies
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
+        gitWebView?.clearHistory()
+        gitWebView?.clearFormData()
+        gitWebView?.clearCache(true)
+        gitWebView?.clearSslPreferences()
+
         gitWebView?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
+
+                Timber.d(request?.url.toString())
                 view?.loadUrl(request?.url.toString())
+
 //                if (Uri.parse(url).host == url) {
 //                    return false
 //                }
-//
+
 //                Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
 //                    startActivity(this)
 //                }
                 return true
             }
         }
+        gitWebView?.webChromeClient = object : WebChromeClient() {
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                Timber.d(consoleMessage?.message().toString())
+                return true
+            }
+        }
         gitWebView?.loadUrl(url)
     }
 
+    private fun initialize() {
+        closeDialogBtn = findViewById(R.id.closeDialogBtn)
+        gitWebView = findViewById(R.id.gitWebView)
+        closeDialogBtn?.setOnClickListener(this)
+    }
+
     override fun onClick(p0: View?) {
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_github_fragment, container, false)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        )
+        when (p0?.id) {
+            R.id.closeDialogBtn -> {
+                finish()
+            }
+        }
     }
 
     companion object {

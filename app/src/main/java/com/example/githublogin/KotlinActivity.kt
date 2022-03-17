@@ -10,7 +10,7 @@ class KotlinActivity : AppCompatActivity() {
     private val githubAuth by lazy {
         GithubAuth.Builder("", "")
             .setIsSafeWindow(isSafeWindow = false)
-            .setActivity(this)
+            .setContext(this)
             .setOnSuccess {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
