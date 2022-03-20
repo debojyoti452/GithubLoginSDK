@@ -1,30 +1,39 @@
 package com.swing.githubloginsdk
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import com.swing.githubloginsdk.src.ui.GithubSheetFragment
+import com.swing.githubloginsdk.src.ui.GithubSDK
 import kotlin.properties.Delegates
+
 
 class GithubAuth private constructor(
     private var isSafeWindow: Boolean,
+    private var gitClientId: String,
     private var gitSecret: String,
-    private var gitToken: String,
     val onSuccess: ((token: String) -> Unit),
     val onFailed: ((error: String) -> Unit),
     val context: Context,
+    val activity: Activity,
 ) {
+    private lateinit var githubSDK: GithubSDK
 
     open class Builder(
+        private val gitClientId: String,
         private val gitSecret: String,
-        private val gitToken: String,
     ) {
         private var isSafeWindow by Delegates.notNull<Boolean>()
         private lateinit var onSuccess: ((token: String) -> Unit)
         private lateinit var onFailed: ((error: String) -> Unit)
         private var context: Context? = null
+        private var activity: Activity? = null
 
         fun setContext(context: Context): Builder {
             this.context = context
+            return this
+        }
+
+        fun setActivity(activity: Activity): Builder {
+            this.activity = activity
             return this
         }
 
@@ -44,30 +53,46 @@ class GithubAuth private constructor(
         }
 
         fun build(): GithubAuth {
-            if (context == null) {
-                throw NullPointerException(
-                    "Activity is missing. " +
-                            "You need to pass current activity. " +
-                            "Use setActivity(activity: Activity) function."
-                )
-            } else {
-                return GithubAuth(
-                    isSafeWindow = isSafeWindow,
-                    gitSecret = gitSecret,
-                    gitToken = gitToken,
-                    onSuccess = onSuccess,
-                    onFailed = onFailed,
-                    context = context!!,
-                )
+            when {
+                context == null -> {
+                    throw NullPointerException(
+                        "Context is missing. " +
+                                "You need to pass current context. " +
+                                "Use setContext(context: Context) function."
+                    )
+                }
+                activity == null -> {
+                    throw NullPointerException(
+                        "Activity is missing. " +
+                                "You need to pass current activity. " +
+                                "Use setActivity(activity: Activity) function."
+                    )
+                }
+                else -> {
+                    return GithubAuth(
+                        isSafeWindow = isSafeWindow,
+                        gitClientId = gitClientId,
+                        gitSecret = gitSecret,
+                        onSuccess = onSuccess,
+                        onFailed = onFailed,
+                        context = context!!,
+                        activity = activity!!,
+                    ).init()
+                }
             }
         }
     }
 
     fun auth() {
-//        https://github.com/login/oauth/authorize?client_id=31e1daafe57abcbd91ce&scope=public_repo%20read:user%20user:email
-//        onSuccess.invoke("Hello World")
-//        val dialog = GithubSheetFragment.newInstance()
-//        dialog.show((context as FragmentActivity).supportFragmentManager, GithubAuth::class.java.simpleName)
-        context.startActivity(Intent(context, GithubSheetFragment::class.java))
+        githubSDK.callGithubAuth()
+    }
+
+    fun initialize() {
+        githubSDK.checkDeepLinkData()
+    }
+
+    private fun init(): GithubAuth {
+        githubSDK = GithubSDK.newInstance(activity, gitClientId = gitClientId, gitSecret = gitSecret)
+        return this
     }
 }

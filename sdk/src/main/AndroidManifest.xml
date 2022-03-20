@@ -6,7 +6,7 @@
 
     <application>
         <activity
-            android:name=".src.ui.GithubSheetFragment"
+            android:name=".src.ui.GithubSDKActivity"
             android:exported="false"
             android:theme="@style/NoActionBar">
             <intent-filter>

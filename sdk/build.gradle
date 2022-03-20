@@ -45,6 +45,8 @@ android {
             includeAndroidResources = true
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
