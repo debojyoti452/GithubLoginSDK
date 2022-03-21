@@ -13,7 +13,7 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 
 
-abstract class GitClient {
+internal abstract class GitRepository<R> {
     val gson: Gson = GsonBuilder().create()
 
     fun initialize() {
@@ -36,17 +36,18 @@ abstract class GitClient {
         conn.connectTimeout = Url.TIMEOUT_CONNECT
         conn.readTimeout = Url.TIMEOUT_READ
         conn.setRequestProperty(Url.HEADER_CONTENT_TYPE, Url.CONTENT_TYPE_JSON)
+        conn.setRequestProperty(Url.HEADER_ACCEPT, Url.CONTENT_TYPE_JSON)
     }
 
     @Throws(IOException::class)
-    open fun writeToOutputStream(conn: HttpURLConnection, data: String) {
+    fun writeToOutputStream(conn: HttpURLConnection, data: String) {
         conn.outputStream.use { out -> out.write(data.toByteArray(StandardCharsets.UTF_8)) }
     }
 
     @Throws(IOException::class)
-    open fun readFromInputStream(conn: HttpURLConnection): String? {
-        conn.inputStream.use { `in` ->
-            InputStreamReader(`in`).use { ir ->
+    fun readFromInputStream(conn: HttpURLConnection): String {
+        conn.inputStream.use { ins ->
+            InputStreamReader(ins).use { ir ->
                 BufferedReader(ir).use { rd ->
                     return readFromBufferedReader(
                         rd
@@ -57,15 +58,16 @@ abstract class GitClient {
     }
 
     @Throws(IOException::class)
-    private fun readFromBufferedReader(`in`: BufferedReader): String? {
+    private fun readFromBufferedReader(inputReader: BufferedReader): String {
         val buf = StringBuilder()
         var line: String?
-        while (`in`.readLine().also { line = it } != null) {
+        while (inputReader.readLine().also { line = it } != null) {
             buf.append(line)
         }
         return buf.toString()
     }
 
+    @Throws(IOException::class)
     fun close(conn: HttpURLConnection) {
         conn.disconnect()
     }

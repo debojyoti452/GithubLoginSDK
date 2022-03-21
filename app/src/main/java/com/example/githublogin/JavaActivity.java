@@ -1,7 +1,6 @@
 package com.example.githublogin;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +15,8 @@ public class JavaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java);
-        githubAuth = new GithubAuth.Builder("", "")
-                .setContext(this)
+        githubAuth = new GithubAuth.Builder("31e1daafe57abcbd91ce", "d875d932ff16bd79c259816371fba6b03c1dde8b")
+                .setActivity(this)
                 .setOnSuccess(message -> {
                     Toast.makeText(JavaActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     return null;
@@ -29,5 +28,11 @@ public class JavaActivity extends AppCompatActivity {
                 .build();
 
         findViewById(R.id.button).setOnClickListener(view -> githubAuth.auth());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        githubAuth.onDeepLinkInitializer();
     }
 }

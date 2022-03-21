@@ -1,32 +1,23 @@
 package com.swing.githubloginsdk.src.executor
 
 import android.os.Handler
-import java.util.concurrent.Executor
+import android.os.Looper
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.Executors
 
 
-class BackgroundExecutor {
+internal class BackgroundExecutor constructor(
+    private var executorService: ExecutorService = Executors.newCachedThreadPool(),
+    private var handler: Handler = Handler(Looper.getMainLooper())
+) {
 
-    private var executorService: ExecutorService? = null
-    private var handler: Handler? = null
-
-    val numberOfCores = Runtime.getRuntime().availableProcessors()
-    private val mForLightWeightBackgroundTasks: ThreadPoolExecutor? = null
-    private val mMainThreadExecutor: Executor? = null
-
-    fun <E> execute(requests: E) {
-
+    fun <E> execute(functions: () -> Unit) {
+        executorService.submit {
+            functions()
+        }
     }
 
-    companion object {
-        private var sInstance: BackgroundExecutor? = null
-
-        fun getInstance(): BackgroundExecutor {
-            if (sInstance == null) {
-                sInstance = BackgroundExecutor()
-            }
-            return sInstance ?: BackgroundExecutor()
-        }
+    fun getUiThread(): Handler {
+        return handler
     }
 }
