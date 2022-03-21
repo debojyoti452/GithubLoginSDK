@@ -23,7 +23,7 @@ internal class GithubSDK private constructor(
     private val gitSecret: String,
 ) : GitClient() {
 
-    private var urlConnection: HttpURLConnection?= null
+    private var urlConnection: HttpURLConnection? = null
 
     private val urlBuilder = StringBuilder().apply {
         append(Url.baseUrl)
@@ -49,9 +49,11 @@ internal class GithubSDK private constructor(
     fun checkDeepLinkData() {
         val data = activity.intent.data
         if (data != null) {
-            Thread {
-                Log.d("KotlinActivity:", "${networkCall(data.getQueryParameter("code"))}")
-            }.start()
+            networkCall(data.getQueryParameter("code"))
+
+//            Thread {
+//                Log.d("KotlinActivity:", "${networkCall(data.getQueryParameter("code"))}")
+//            }.start()
         }
     }
 
