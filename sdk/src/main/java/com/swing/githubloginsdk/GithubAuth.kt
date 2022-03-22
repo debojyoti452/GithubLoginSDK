@@ -3,6 +3,7 @@ package com.swing.githubloginsdk
 import android.app.Activity
 import com.swing.githubloginsdk.src.model.AuthResult
 import com.swing.githubloginsdk.src.ui.GithubSDK
+import com.swing.githubloginsdk.src.utils.Utils
 
 
 class GithubAuth private constructor(
@@ -11,7 +12,9 @@ class GithubAuth private constructor(
     val onSuccess: ((authResult: AuthResult) -> Unit),
     val onFailed: ((exception: Exception) -> Unit),
     val activity: Activity,
+    val scopeUrl: String,
 ) {
+
     private lateinit var githubSDK: GithubSDK
 
     open class Builder(
@@ -21,6 +24,7 @@ class GithubAuth private constructor(
         private lateinit var onSuccess: ((authResult: AuthResult) -> Unit)
         private lateinit var onFailed: ((error: Exception) -> Unit)
         private var activity: Activity? = null
+        private var scopeList: List<String> = ArrayList()
 
         fun setActivity(activity: Activity): Builder {
             this.activity = activity
@@ -37,22 +41,32 @@ class GithubAuth private constructor(
             return this
         }
 
+        fun setScopes(scopeList: List<String>): Builder {
+            this.scopeList = scopeList
+            return this
+        }
+
         fun build(): GithubAuth {
             when (activity) {
                 null -> {
-                    throw NullPointerException(
+                    throw IllegalStateException(
                         "Activity is missing. " +
                                 "You need to pass current activity. " +
                                 "Use setActivity(activity: Activity) function."
                     )
                 }
                 else -> {
+                    if (scopeList.isEmpty()) {
+                        throw IllegalStateException("Scope List cannot be empty.")
+                    }
+
                     return GithubAuth(
                         gitClientId = gitClientId,
                         gitSecret = gitSecret,
                         onSuccess = onSuccess,
                         onFailed = onFailed,
                         activity = activity!!,
+                        scopeUrl = Utils.scopeUrlGenerator(scopeList)
                     ).init()
                 }
             }
@@ -72,6 +86,7 @@ class GithubAuth private constructor(
             activity,
             gitClientId = gitClientId,
             gitSecret = gitSecret,
+            scopes = scopeUrl,
             onSuccess = onSuccess,
             onFailed = onFailed
         )

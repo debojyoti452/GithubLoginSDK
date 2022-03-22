@@ -7,11 +7,11 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.google.gson.JsonParseException
+import com.swing.githubloginsdk.src.constants.Url
 import com.swing.githubloginsdk.src.executor.BackgroundExecutor
 import com.swing.githubloginsdk.src.model.AuthResult
 import com.swing.githubloginsdk.src.model.GitRequest
 import com.swing.githubloginsdk.src.network.GitRepository
-import com.swing.githubloginsdk.src.utils.Url
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -23,6 +23,7 @@ internal class GithubSDK private constructor(
     private val activity: Activity,
     private val gitClientId: String,
     private val gitSecret: String,
+    private val scopes: String,
     val onSuccess: ((authResult: AuthResult) -> Unit),
     val onFailed: ((exception: Exception) -> Unit),
     private val backgroundExecutor: BackgroundExecutor = BackgroundExecutor()
@@ -37,14 +38,10 @@ internal class GithubSDK private constructor(
     private val urlBuilder = StringBuilder().apply {
         append(Url.baseUrl)
         append(StringBuilder().append("?").append(Url.clientId).append("=").append(gitClientId))
-        append(StringBuilder().append("&").append(Url.scope))
-        append(StringBuilder().append("&").append(Url.read))
-        append(StringBuilder().append("&").append(Url.user))
+        append(scopes)
     }
 
-    @SuppressLint("LogNotTimber")
     fun callGithubAuth() {
-        Log.d("KotlinActivity:", urlBuilder.toString())
         try {
             val webpage: Uri = Uri.parse(urlBuilder.toString())
             val myIntent = Intent(Intent.ACTION_VIEW, webpage)
@@ -54,11 +51,10 @@ internal class GithubSDK private constructor(
         }
     }
 
-    @SuppressLint("LogNotTimber")
     fun checkDeepLinkData() {
         val data = activity.intent.data
-        if (data != null) {
-            backgroundExecutor.execute<AuthResult> {
+        if (data != null && !data.getQueryParameter("code").isNullOrBlank()) {
+            backgroundExecutor.execute {
                 networkCall(data.getQueryParameter("code"))
             }
         }
@@ -129,6 +125,7 @@ internal class GithubSDK private constructor(
             activity: Activity,
             gitClientId: String,
             gitSecret: String,
+            scopes: String,
             onSuccess: ((authResult: AuthResult) -> Unit),
             onFailed: ((exception: Exception) -> Unit),
         ): GithubSDK {
@@ -136,6 +133,7 @@ internal class GithubSDK private constructor(
                 activity = activity,
                 gitClientId = gitClientId,
                 gitSecret = gitSecret,
+                scopes = scopes,
                 onSuccess = onSuccess,
                 onFailed = onFailed
             )

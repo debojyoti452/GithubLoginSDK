@@ -25,6 +25,19 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+
+            buildConfigField "String", 'GIT_CLIENT_ID', "\"" + getLocalPropertiesValue("git_client_id") + "\""
+            buildConfigField "String", 'GIT_CLIENT_SECRET', "\"" + getLocalPropertiesValue("git_secret") + "\""
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+
+            buildConfigField "String", 'GIT_CLIENT_ID', "\"" + getLocalPropertiesValue("git_client_id") + "\""
+            buildConfigField "String", 'GIT_CLIENT_SECRET', "\"" + getLocalPropertiesValue("git_secret") + "\""
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

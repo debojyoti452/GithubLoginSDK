@@ -15,7 +15,7 @@ public class JavaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java);
-        githubAuth = new GithubAuth.Builder("31e1daafe57abcbd91ce", "d875d932ff16bd79c259816371fba6b03c1dde8b")
+        githubAuth = new GithubAuth.Builder(BuildConfig.GIT_CLIENT_ID, BuildConfig.GIT_CLIENT_SECRET)
                 .setActivity(this)
                 .setOnSuccess(message -> {
                     Toast.makeText(JavaActivity.this, "Success", Toast.LENGTH_SHORT).show();

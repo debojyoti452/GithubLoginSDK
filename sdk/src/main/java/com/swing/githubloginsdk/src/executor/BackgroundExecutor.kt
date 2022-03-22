@@ -11,7 +11,7 @@ internal class BackgroundExecutor constructor(
     private var handler: Handler = Handler(Looper.getMainLooper())
 ) {
 
-    fun <E> execute(functions: () -> Unit) {
+    fun execute(functions: () -> Unit) {
         executorService.submit {
             functions()
         }

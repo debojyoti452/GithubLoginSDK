@@ -56,7 +56,6 @@ dependencies {
             ext.libDependencies.kotlinKtx,
             ext.libDependencies.coroutines,
             ext.libDependencies.coroutinesAndroid,
-            ext.libDependencies.timber,
             ext.libDependencies.gson,
             ext.uiDependencies.material,
 
@@ -113,7 +112,7 @@ afterEvaluate {
                 from components.release
 //                println("Components: " + components*.name)
                 artifact androidSourcesJar
-                version = '9.8.0'
+                version = '1.0.0'
             }
         }
     }

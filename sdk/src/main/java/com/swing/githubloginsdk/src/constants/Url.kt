@@ -1,4 +1,4 @@
-package com.swing.githubloginsdk.src.utils
+package com.swing.githubloginsdk.src.constants
 
 internal object Url {
     const val accessUrl = "https://github.com/login/oauth/access_token"
