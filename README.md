@@ -3,9 +3,10 @@
 [![](https://jitpack.io/v/debojyoti452/GithubLoginSDK.svg)](https://jitpack.io/#debojyoti452/GithubLoginSDK)
 
 ## Motivation BTS: :octocat:
-**Reason Behind Building SDK** :- As all we know that Github SDK is already available in Firebase Auth SDK but it has limitation like using custom redirect url can't be used or setting scopes is hard. Firebase Auth comes with a lot of extras like analytics, etc.. So I need a solution which simply just do the auth and return me token. So as usual was looking for an efficient SDK that can help me with this simple Auth, but TBH not a single solution I able to find, all were complex and head scratching. Finally I created my own and made it open source. 
+**Reason Behind Building SDK** :- As all we know that Github SDK is already available in Firebase Auth SDK but it has limitation like using custom redirect url can't be used or setting scopes is hard. Firebase Auth comes with a lot of extras like analytics, etc.. So I need a solution which simply just do the auth and return me token. So as usual was looking for an efficient SDK that can help me with this simple Auth, but TBH not a single solution I able to find, all were complex and head scratching. Finally I created my own and made it open source.
 
-:fire: Light Weight SDK (No Extra Libs used)
+* :fire: **Light Weight SDK (No Extra Libs used)**
+* :sunglasses: **Works with Firebase Authentication Redirect Url also. (No Extra Firebase SDK Required)**
 ---
 ## Installation
 #### Project Root Level Gradle (Below 7.0)
