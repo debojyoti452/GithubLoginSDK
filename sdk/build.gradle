@@ -3,10 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
+def globalConfiguration = rootProject.extensions.getByName("ext")
 
 android {
-    def globalConfiguration = rootProject.extensions.getByName("ext")
-
     compileSdk globalConfiguration["androidCompileSDK"]
 
     defaultConfig {
@@ -25,7 +24,6 @@ android {
 
         debug {
             minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -54,26 +52,13 @@ dependencies {
     implementation(
             ext.libDependencies.kotlin,
             ext.libDependencies.kotlinKtx,
-            ext.libDependencies.coroutines,
-            ext.libDependencies.coroutinesAndroid,
             ext.libDependencies.gson,
             ext.uiDependencies.material,
-
-            ext.libDependencies.retrofit,
-            ext.libDependencies.retrofitConversion,
-            ext.libDependencies.okHttp,
-            ext.libDependencies.okHttpLoggingInterceptor,
-            ext.libDependencies.retrofitCoroutinesAdapter,
     )
 
     testImplementation(
             ext.testDependencies.junit,
             ext.testDependencies.truth,
-            ext.testDependencies.mockk,
-            ext.testDependencies.coroutinesAndroidTest,
-            ext.testDependencies.jUnitX,
-            ext.testDependencies.androidCoreTest,
-            ext.testDependencies.archCoreTest,
     )
 
     androidTestImplementation(
@@ -112,19 +97,8 @@ afterEvaluate {
                 from components.release
 //                println("Components: " + components*.name)
                 artifact androidSourcesJar
-                version = '1.0.0'
+                version = globalConfiguration["androidVersionName"]
             }
         }
     }
-}
-
-/**
- * get value from local.properties
- *
- * @return value of the key
- */
-def getLocalPropertiesValue(key) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty(key)
 }

@@ -25,6 +25,7 @@ class GithubAuth private constructor(
         private lateinit var onFailed: ((error: Exception) -> Unit)
         private var activity: Activity? = null
         private var scopeList: List<String> = ArrayList()
+        private var redirectUri : String ?= null
 
         fun setActivity(activity: Activity): Builder {
             this.activity = activity
@@ -43,6 +44,11 @@ class GithubAuth private constructor(
 
         fun setScopes(scopeList: List<String>): Builder {
             this.scopeList = scopeList
+            return this
+        }
+
+        fun setRedirectUrl(redirectUrl: String?) : Builder {
+            this.redirectUri = redirectUrl
             return this
         }
 
@@ -66,7 +72,7 @@ class GithubAuth private constructor(
                         onSuccess = onSuccess,
                         onFailed = onFailed,
                         activity = activity!!,
-                        scopeUrl = Utils.scopeUrlGenerator(scopeList)
+                        scopeUrl = Utils.scopeUrlGenerator(scopeList, redirectUri)
                     ).init()
                 }
             }

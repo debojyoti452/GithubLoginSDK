@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Github Login SDK</string>
-    <string name="open_github_auth">Open Github Auth</string>
+    <string name="open_github_auth">Sign in with Github</string>
     <string name="open_java_activity">Open Java Activity</string>
     <string name="open_kotlin_activity">Open Kotlin Activity</string>
+    <string name="no_user_logged_in">No User Logged In.</string>
 </resources>

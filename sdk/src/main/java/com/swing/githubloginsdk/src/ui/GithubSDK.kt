@@ -1,11 +1,9 @@
 package com.swing.githubloginsdk.src.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import com.google.gson.JsonParseException
 import com.swing.githubloginsdk.src.constants.Url
 import com.swing.githubloginsdk.src.executor.BackgroundExecutor
@@ -17,7 +15,6 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.SocketException
 import java.net.URL
-
 
 internal class GithubSDK private constructor(
     private val activity: Activity,

@@ -6,6 +6,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.swing.githubloginsdk.GithubAuth;
+import com.swing.githubloginsdk.src.constants.Scopes;
+
+import java.util.Arrays;
 
 public class JavaActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class JavaActivity extends AppCompatActivity {
                     Toast.makeText(JavaActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     return null;
                 })
+                .setScopes(Arrays.asList(Scopes.PUBLIC_REPO, Scopes.USER_EMAIL))
                 .build();
 
         findViewById(R.id.button).setOnClickListener(view -> githubAuth.auth());
