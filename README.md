@@ -147,6 +147,6 @@ dependencies {
 ## Open Source Plugins used
 | Library | README |
 | ------ | ------ |
-| HttpUrlConnection | [https://developer.android.com/reference/java/net/HttpURLConnection][PlDb] |
-| GSON Serializer | [https://github.com/google/gson][PlGd] |
-| Android STD Libs | [https://developer.android.com/kotlin/first][PlMe] |
+| HttpUrlConnection | [https://developer.android.com/reference/java/net/HttpURLConnection] |
+| GSON Serializer | [https://github.com/google/gson] |
+| Android STD Libs | [https://developer.android.com/kotlin/first] |
