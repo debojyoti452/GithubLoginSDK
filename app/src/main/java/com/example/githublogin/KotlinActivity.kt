@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.swing.githubloginsdk.GithubAuth
 import com.swing.githubloginsdk.src.constants.Scopes
+import com.swing.githubloginsdk.src.model.AuthResult
 import java.util.*
 
 @SuppressLint("SetTextI18n")
@@ -16,7 +17,7 @@ class KotlinActivity : AppCompatActivity(), View.OnClickListener {
 
     private var userInformationTV: AppCompatTextView? = null
 
-    private val githubAuth by lazy {
+    private val githubAuth : GithubAuth by lazy {
         GithubAuth.Builder(BuildConfig.GIT_CLIENT_ID, BuildConfig.GIT_CLIENT_SECRET)
             .setActivity(this)
             .setOnSuccess {
@@ -29,7 +30,7 @@ class KotlinActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         userInformationTV?.text = "No User Token Found."
                     }
-                }else {
+                } else {
                     userInformationTV?.text = String.format(
                         Locale.getDefault(), "Token: %s...\nType: %s\nScopes: %s",
                         it.accessToken?.chunked((it.accessToken?.length ?: 0) / 2)?.firstOrNull(),
