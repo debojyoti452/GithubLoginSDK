@@ -111,6 +111,13 @@ dependencies {
  ```kotlin
         setRedirectUrl("WILL ACCEPT ONLY THE URL USED IN YOUR GITHUB OAUTH APP CREATION")
  ```
+ * #### Authorization Call **(Mandatory)**
+    It will open the external browser for github oauth authorization.
+ ```kotlin
+        override fun onClick(id: Int?) {
+            githubAuth.auth()
+        }
+ ```
  * #### Deep Link Observer **(Mandatory)**
     It will check when we will return the ==Auth Code== after ==Github Web OAuth== Successfully done.
  ```kotlin
