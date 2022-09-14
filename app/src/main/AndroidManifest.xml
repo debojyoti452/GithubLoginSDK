@@ -25,7 +25,7 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
 
-                <data android:host="swing-452.firebaseapp.com" />
+                <data android:host="${gitHost}" />
             </intent-filter>
         </activity>
 
